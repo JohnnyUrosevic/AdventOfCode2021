@@ -1,10 +1,9 @@
 mod get_input;
-use get_input::get_input;
+mod sonar_sweep;
+
+use sonar_sweep::sonar_sweep;
 
 fn main() {
-    let input = get_input(1).expect("Could not get input");
-
-    for line in input.iter() {
-        println!("{}", line);
-    }
+    // day 1
+    sonar_sweep();
 }
