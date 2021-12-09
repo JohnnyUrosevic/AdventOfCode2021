@@ -11,6 +11,6 @@ pub fn get_input(day: i8) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         .send()?
         .text()
         .expect("Could not send request");
-    
-    Ok(vec!(body.split('\n').collect::<String>()))
+
+    Ok(body.lines().map(String::from).collect())
 }

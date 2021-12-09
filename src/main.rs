@@ -5,6 +5,6 @@ fn main() {
     let input = get_input(1).expect("Could not get input");
 
     for line in input.iter() {
-        println!(line);
+        println!("{}", line);
     }
 }
