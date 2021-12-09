@@ -1,6 +1,6 @@
 use crate::get_input::get_input;
 
-pub fn sonar_sweep() -> i32 {
+pub fn sonar_sweep() -> (i32, i32) {
     let input = get_input(1).expect("Could not get input");
 	let parsed: Vec<i32> = input.iter().map(|e| e.parse::<i32>().unwrap()).collect();
 
@@ -11,5 +11,5 @@ pub fn sonar_sweep() -> i32 {
 		acc + (a < b) as i32
     });
 
-    count
+    (count, 0)
 }
