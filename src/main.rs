@@ -1,11 +1,16 @@
 mod get_input;
 mod sonar_sweep;
 mod dive;
+mod binary_diagnostic;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
+use binary_diagnostic::binary_diagnostic;
 
-fn print_results(day: i32, result: (i32, i32)) {
+use std::fmt::Display;
+
+fn print_results<T: Display>(day: i32, result: (T, T))
+{
     let (part1, part2) = result;
     println!("Day {}: {} {}", day, part1, part2);
 }
@@ -13,4 +18,5 @@ fn print_results(day: i32, result: (i32, i32)) {
 fn main() {
     print_results(1, sonar_sweep());
     print_results(2, dive());
+    print_results(3, binary_diagnostic());
 }
