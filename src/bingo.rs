@@ -33,9 +33,11 @@ pub fn bingo() -> (i32, i32) {
     let mut row_counts = vec![vec![0; 5]; boards_len];
     let mut col_counts= vec![vec![0; 5]; boards_len];
 
-    let mut score = 0;
+    let mut score = None;
+    let mut last_score = 0;
+    let mut has_won = vec![false; boards_len];
 
-    'outed: for called in called_numbers {
+    for called in called_numbers {
         for (i, board) in boards.iter_mut().enumerate() {
             let (r, c) = match board.remove(&called) {
                 Some((r, c)) => (r, c),
@@ -45,13 +47,18 @@ pub fn bingo() -> (i32, i32) {
             row_counts[i][r] += 1;
             col_counts[i][c] += 1;
 
-            if row_counts[i][r] == 5 || col_counts[i][c] == 5 {
+            if (row_counts[i][r] == 5 || col_counts[i][c] == 5) && !has_won[i] {
                 let unmarked: i32 = board.keys().sum();
-                score = unmarked * called;
-                break 'outed;
+                last_score = unmarked * called; 
+
+                if score == None {
+                    score = Some(last_score);
+                }
+
+                has_won[i] = true;
             }
         }
     }
 
-    (score, 0)
+    (score.unwrap(), last_score)
 }
