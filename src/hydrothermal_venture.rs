@@ -1,7 +1,7 @@
 use crate::get_input::get_input;
 
 use std::collections::HashSet;
-use std::mem;
+use either::Either;
 
 #[derive(PartialEq, Eq, Hash, Clone, Debug)]
 struct Point {
@@ -32,60 +32,92 @@ pub fn hydrothermal_venture() -> (usize, usize) {
       .collect();
 
     let mut straight_seen_points = HashSet::new();
-    let mut seen_points = HashSet::new();
     let mut straight_overlap= HashSet::new();
-    let mut overlap= HashSet::new();
 
     for line in lines.iter() {
-      let mut x1 = line[0].x;
-      let mut x2 = line[1].x;
+      let x1 = line[0].x;
+      let x2 = line[1].x;
 
-      if x2 < x1 {
-        mem::swap(&mut x2, &mut x1);
-      }
-
-      let mut y1 = line[0].y;
-      let mut y2 = line[1].y;
-
-      if y2 < y1 {
-        mem::swap(&mut y2, &mut y1);
-      }
-
-      let straight = x1 == x2 || y1 == y2;
+      let y1 = line[0].y;
+      let y2 = line[1].y;
 
       let dy = y2 - y1;
       let dx = x2 - x1;
 
-      if dy > dx {
-        let mut x = x1;
-        for y in y1..y2+1 {
-          for _ in 0..dx+1 {
-            let point = Point{x, y};
-            if !seen_points.insert(point.clone()) {
-                overlap.insert(point.clone());
-            };
-            if straight && !straight_seen_points.insert(point.clone()) {
-              straight_overlap.insert(point.clone());
-            }
-            x += !straight as i32;
+      if dy == 0 {
+        let y = y1;
+        let it = if x2 > x1 {
+          Either::Left(x1..=x2)
+        } else {
+          Either::Right((x2..=x1).rev())
+        };
+        for x in it {
+          let point = Point{x, y};
+          if !straight_seen_points.insert(point.clone()) {
+            straight_overlap.insert(point.clone());
           }
         }
       }
-      else {
-        let mut y = y1;
-        for x in x1..x2+1 {
-          for _ in 0..dy+1 {
-            let point = Point{x, y};
-            if !seen_points.insert(point.clone()) {
-                overlap.insert(point.clone());
-            };
-            if straight && !straight_seen_points.insert(point.clone()) {
-              straight_overlap.insert(point.clone());
-            }
-            y += !straight as i32;
+      else if dx == 0 {
+        let x = x1;
+        let it = if y2 > y1 {
+          Either::Left(y1..=y2)
+        } else {
+          Either::Right((y2..=y1).rev())
+        };
+
+        for y in it {
+          let point = Point{x, y};
+          if !straight_seen_points.insert(point.clone()) {
+            straight_overlap.insert(point.clone());
           }
         }
       }
     }
-    (straight_overlap.len(), overlap.len())
+
+    let mut seen_points = HashSet::new();
+    let mut overlap= HashSet::new();
+
+    for line in lines.iter() {
+      let x1 = line[0].x;
+      let x2 = line[1].x;
+
+      let y1 = line[0].y;
+      let y2 = line[1].y;
+
+      let dy = y2 - y1;
+      let dx = x2 - x1;
+
+      if dy != 0 && dx != 0 {
+        let x_it = if x2 > x1 {
+          Either::Left(x1..=x2)
+        } else {
+          Either::Right((x2..=x1).rev())
+        };
+
+        let y_it = if y2 > y1 {
+          Either::Left(y1..=y2)
+        } else {
+          Either::Right((y2..=y1).rev())
+        };
+
+        for (x, y) in x_it.zip(y_it) {
+          let point = Point{x, y};
+          if straight_seen_points.get(&point).is_some() {
+            if straight_overlap.get(&point).is_some() {
+              continue;
+            }
+
+            overlap.insert(point);
+          }
+          else {
+            if !seen_points.insert(point.clone()) {
+              overlap.insert(point);
+            }
+          }
+        }
+      }
+    }
+
+    (straight_overlap.len(), straight_overlap.len() + overlap.len())
 }
