@@ -4,12 +4,14 @@ mod dive;
 mod binary_diagnostic;
 mod bingo;
 mod hydrothermal_venture;
+mod lanternfish;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
 use binary_diagnostic::binary_diagnostic;
 use bingo::bingo;
 use hydrothermal_venture::hydrothermal_venture;
+use lanternfish::lanternfish;
 
 use std::fmt::Display;
 
@@ -24,5 +26,6 @@ fn main() {
     print_results(2, dive());
     print_results(3, binary_diagnostic());
     print_results(4, bingo());
-    print_results(4, hydrothermal_venture());
+    print_results(5, hydrothermal_venture());
+    print_results(6,lanternfish());
 }
