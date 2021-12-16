@@ -7,6 +7,7 @@ mod hydrothermal_venture;
 mod lanternfish;
 mod treachery_of_whales;
 mod seven_segment_search;
+mod smoke_basin;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -16,6 +17,7 @@ use hydrothermal_venture::hydrothermal_venture;
 use lanternfish::lanternfish;
 use treachery_of_whales::treachery_of_whales;
 use seven_segment_search::seven_segment_search;
+use smoke_basin::smoke_basin;
 
 use std::fmt::Display;
 
@@ -34,4 +36,5 @@ fn main() {
     print_results(6, lanternfish());
     print_results(7, treachery_of_whales());
     print_results(8, seven_segment_search());
+    print_results(9, smoke_basin());
 }
