@@ -39,5 +39,5 @@ fn main() {
     print_results(7, treachery_of_whales());
     print_results(8, seven_segment_search());
     print_results(9, smoke_basin());
-    print_results(9, syntax_scoring());
+    print_results(10, syntax_scoring());
 }
