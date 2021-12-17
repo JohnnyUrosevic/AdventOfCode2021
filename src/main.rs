@@ -8,6 +8,7 @@ mod lanternfish;
 mod treachery_of_whales;
 mod seven_segment_search;
 mod smoke_basin;
+mod syntax_scoring;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -18,6 +19,7 @@ use lanternfish::lanternfish;
 use treachery_of_whales::treachery_of_whales;
 use seven_segment_search::seven_segment_search;
 use smoke_basin::smoke_basin;
+use syntax_scoring::syntax_scoring;
 
 use std::fmt::Display;
 
@@ -37,4 +39,5 @@ fn main() {
     print_results(7, treachery_of_whales());
     print_results(8, seven_segment_search());
     print_results(9, smoke_basin());
+    print_results(9, syntax_scoring());
 }
