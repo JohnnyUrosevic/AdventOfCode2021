@@ -10,6 +10,7 @@ mod seven_segment_search;
 mod smoke_basin;
 mod syntax_scoring;
 mod dumbo_octopus;
+mod passage_pathing;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -22,6 +23,7 @@ use seven_segment_search::seven_segment_search;
 use smoke_basin::smoke_basin;
 use syntax_scoring::syntax_scoring;
 use dumbo_octopus::dumbo_octopus;
+use passage_pathing::passage_pathing;
 
 use std::fmt::Display;
 
@@ -43,4 +45,5 @@ fn main() {
     print_results(9, smoke_basin());
     print_results(10, syntax_scoring());
     print_results(11, dumbo_octopus());
+    print_results(12, passage_pathing());
 }
