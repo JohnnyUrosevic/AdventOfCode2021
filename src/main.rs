@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 mod get_input;
 mod sonar_sweep;
 mod dive;
@@ -12,6 +14,7 @@ mod syntax_scoring;
 mod dumbo_octopus;
 mod passage_pathing;
 mod transparent_origami;
+mod extended_polymerization;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -26,6 +29,7 @@ use syntax_scoring::syntax_scoring;
 use dumbo_octopus::dumbo_octopus;
 use passage_pathing::passage_pathing;
 use transparent_origami::transparent_origami;
+use extended_polymerization::extended_polymerization;
 
 use std::fmt::Display;
 
@@ -49,4 +53,5 @@ fn main() {
     print_results(11, dumbo_octopus());
     print_results(12, passage_pathing());
     print_results(13, transparent_origami());
+    print_results(14, extended_polymerization());
 }
