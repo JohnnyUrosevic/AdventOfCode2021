@@ -15,6 +15,7 @@ mod dumbo_octopus;
 mod passage_pathing;
 mod transparent_origami;
 mod extended_polymerization;
+mod chiton;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -30,6 +31,7 @@ use dumbo_octopus::dumbo_octopus;
 use passage_pathing::passage_pathing;
 use transparent_origami::transparent_origami;
 use extended_polymerization::extended_polymerization;
+use chiton::chiton;
 
 use std::fmt::Display;
 
@@ -54,4 +56,5 @@ fn main() {
     print_results(12, passage_pathing());
     print_results(13, transparent_origami());
     print_results(14, extended_polymerization());
+    print_results(15, chiton());
 }
