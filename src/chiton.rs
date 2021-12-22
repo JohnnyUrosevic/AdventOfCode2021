@@ -9,15 +9,15 @@ struct AStar {
   grid: Vec<Vec<u64>>,
   height: usize,
   width: usize,
-  extended: bool,
+  extension: usize,
 }
 
 impl AStar {
-  fn new(height: usize, width: usize, grid: Vec<Vec<u64>>, extended: bool) -> Self {
+  fn new(height: usize, width: usize, grid: Vec<Vec<u64>>, extension: usize) -> Self {
     let heap = BinaryHeap::new();
     let costs = HashMap::new();
 
-    let mut a_star = AStar{heap, costs, grid, height, width, extended};
+    let mut a_star = AStar{heap, costs, grid, height, width, extension};
 
     a_star.heap.push(a_star.get_heap_element(0, 0, 1));
     a_star.heap.push(a_star.get_heap_element(0, 1, 0));
@@ -26,13 +26,8 @@ impl AStar {
   }
 
   fn manhattan_distance(&self, i: usize, j: usize) -> u64 {
-    let mut width = self.width;
-    let mut height= self.height;
-
-    if self.extended {
-      width *= 5;
-      height *= 5;
-    }
+    let width = self.width * self.extension;
+    let height= self.height * self.extension;
 
     (width - j - 1) as u64 + (height - i - 1) as u64
   }
@@ -48,13 +43,8 @@ impl AStar {
   }
 
   fn search(&mut self) -> u64 {
-    let mut width = self.width;
-    let mut height= self.height;
-
-    if self.extended {
-      width *= 5;
-      height *= 5;
-    }
+    let width = self.width * self.extension;
+    let height= self.height * self.extension;
 
     loop {
       let Reverse((_, i, j, distance)) = self.heap.pop().expect("No path exists");
@@ -76,7 +66,7 @@ impl AStar {
         let x = x as usize;
 
         let new_cost = distance + self.get_risk(y, x);
-        
+
         let c = self.costs.entry((x, y)).or_insert(u64::MAX);
 
         if new_cost < *c {
@@ -101,11 +91,11 @@ pub fn chiton() -> (u64, u64) {
   let height = grid.len();
   let width = grid[0].len();
 
-  let mut a_star = AStar::new(height, width, grid.clone(), false);
+  let mut a_star = AStar::new(height, width, grid.clone(), 1);
 
   let total_distance = a_star.search();
 
-  let mut a_star_extended = AStar::new(height, width, grid, true);
+  let mut a_star_extended = AStar::new(height, width, grid, 5);
   let extended_distance = a_star_extended.search();
 
   (total_distance, extended_distance)
