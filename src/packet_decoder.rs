@@ -1,7 +1,14 @@
 use crate::get_input::get_input;
 
 enum PacketType {
+  Sum = 0b000,
+  Product = 0b001,
+  Minimum = 0b010,
+  Maximum = 0b011,
   Literal = 0b100,
+  GreaterThan = 0b101,
+  LessThan = 0b110,
+  EqualTo = 0b111,
 }
 
 struct BitStream {
@@ -25,14 +32,12 @@ impl BitStream {
     result
   }
 
-  fn get_packet(&mut self) {
+  fn get_packet(&mut self) -> u64 {
     self.version_sum += self.read(3);
-    println!("version sum {}", self.version_sum);
 
     let packet_type = self.read(3);
 
     if packet_type == PacketType::Literal as u64 {
-      println!("literal");
       let mut last_chunk = false;
       let mut value = 0;
       loop {
@@ -46,35 +51,47 @@ impl BitStream {
         value += self.read(4);
 
         if last_chunk {
-          break;
+          return value;
         }
       }
     }
     else {
-      println!("operator");
       let length_type = self.read(1);
 
-      println!("length type: {}", length_type);
-
+      let mut values = vec![];
       if length_type == 0 {
         let bit_length = self.read(15) as usize;
 
-        println!("bit length: {}", bit_length);
-        
         let original_index = self.bit_index;
 
         while self.bit_index - original_index < bit_length {
-          self.get_packet();
+          values.push(self.get_packet());
         }
       }
       else {
         let packet_length = self.read(11) as usize;
 
-        println!("packet length: {}", packet_length);
-
         for _ in 0..packet_length {
-          self.get_packet();
+          values.push(self.get_packet());
         }
+      }
+
+      match packet_type {
+        packet_type if packet_type == PacketType::Sum as u64 => 
+          values.iter().sum(),
+        packet_type if packet_type == PacketType::Product as u64 => 
+          values.iter().product(),
+        packet_type if packet_type == PacketType::Minimum as u64 => 
+          *values.iter().min().expect("Must be at least one sub packet"),
+        packet_type if packet_type == PacketType::Maximum as u64 => 
+          *values.iter().max().expect("Must be at least one sub packet"),
+        packet_type if packet_type == PacketType::GreaterThan as u64 => 
+          (values[0] > values[1]) as u64,
+        packet_type if packet_type == PacketType::LessThan as u64 => 
+          (values[0] < values[1]) as u64,
+        packet_type if packet_type == PacketType::EqualTo as u64 => 
+          (values[0] == values[1]) as u64,
+        _ => panic!("Literals should not get this far"),
       }
     }
   }
@@ -103,7 +120,7 @@ pub fn packet_decoder() -> (u64, u64) {
 
   
   let mut bs = BitStream::new(bits);
-  bs.get_packet();
+  let result = bs.get_packet();
   
-  (bs.version_sum, 0)
+  (bs.version_sum, result)
 }
