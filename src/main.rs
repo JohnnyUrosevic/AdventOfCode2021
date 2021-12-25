@@ -18,6 +18,7 @@ mod extended_polymerization;
 mod chiton;
 mod packet_decoder;
 mod trick_shot;
+mod snailfish;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -36,6 +37,7 @@ use extended_polymerization::extended_polymerization;
 use chiton::chiton;
 use packet_decoder::packet_decoder;
 use trick_shot::trick_shot;
+use snailfish::snailfish;
 
 use std::fmt::Display;
 
@@ -63,4 +65,5 @@ fn main() {
     print_results(15, chiton());
     print_results(16, packet_decoder());
     print_results(17, trick_shot());
+    print_results(18, snailfish());
 }
