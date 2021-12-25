@@ -17,6 +17,7 @@ mod transparent_origami;
 mod extended_polymerization;
 mod chiton;
 mod packet_decoder;
+mod trick_shot;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -34,6 +35,7 @@ use transparent_origami::transparent_origami;
 use extended_polymerization::extended_polymerization;
 use chiton::chiton;
 use packet_decoder::packet_decoder;
+use trick_shot::trick_shot;
 
 use std::fmt::Display;
 
@@ -60,4 +62,5 @@ fn main() {
     print_results(14, extended_polymerization());
     print_results(15, chiton());
     print_results(16, packet_decoder());
+    print_results(17, trick_shot());
 }
