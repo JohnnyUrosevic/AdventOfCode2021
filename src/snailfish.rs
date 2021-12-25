@@ -1,12 +1,15 @@
 use crate::get_input::get_input;
 use num::Integer;
 use std::fmt;
+use std::cmp::max;
 
+#[derive(Clone)]
 struct Pair {
   left: Box<Node>,
   right: Box<Node>,
 }
 
+#[derive(Clone)]
 enum Node {
   Value(u64),
   Pair(Pair)
@@ -299,5 +302,21 @@ pub fn snailfish() -> (u64, u64) {
     pair = new_pair;
   };
 
-  (pair.magnitude(), 0)
+  let mut max_magnitude = 0;
+
+  let numbers: Vec<Pair> = input.iter()
+    .map(|e| Pair::new(e))
+    .collect();
+
+  for i in 0..numbers.len()-1 {
+    for j in 1..numbers.len(){
+      let a = numbers[i].clone();
+      let b = numbers[j].clone();
+
+      max_magnitude = max(max_magnitude,add(a.clone(), b.clone()).magnitude());
+      max_magnitude = max(max_magnitude,add(b.clone(), a.clone()).magnitude());
+    }
+  }
+
+  (pair.magnitude(), max_magnitude)
 }
