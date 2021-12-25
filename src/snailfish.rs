@@ -77,13 +77,11 @@ impl Pair {
 
   fn reduce(&mut self) -> bool {
     let has_exploded = self.do_explode();
-    println!("{} exploded:{} ", self, has_exploded);
     if has_exploded {
       return true
     }
 
     let has_split = self.split();
-    println!("{} split:{}", self, has_split);
 
     has_split
   }
@@ -105,7 +103,7 @@ impl Pair {
   fn do_explode(&mut self) -> bool {
     match &mut *self.left {
       Node::Pair(pair) => {
-        let (has_exploded, _, right_val, _) = pair.explode(1);
+        let (has_exploded, _, right_val) = pair.explode(1);
         if has_exploded {
           match &mut *self.right {
             Node::Pair(pair) => {
@@ -124,7 +122,7 @@ impl Pair {
 
     match &mut *self.right {
       Node::Pair(pair) => {
-        let (has_exploded, left_val, _, _) = pair.explode(1);
+        let (has_exploded, left_val, _) = pair.explode(1);
         if has_exploded {
           match &mut *self.left{
             Node::Pair(pair) => {
@@ -144,67 +142,27 @@ impl Pair {
     }
   }
 
-  fn explode(&mut self, depth: u8) -> (bool, u64, u64, bool) {
+  fn explode(&mut self, depth: u8) -> (bool, u64, u64) {
     if depth >= 4 {
-      println!("{}", self);
       let left_val = match &mut *self.left {
         Node::Value(val) => val,
-        Node::Pair(pair) => {
-          let (_, left_val, right_val, just_exploded)
-            = pair.explode(depth + 1);
-          
-          if just_exploded {
-            *self.left = Node::Value(0);
-          }
-          
-          match &mut *self.right {
-            Node::Value(val) => {
-              let new_right = Node::Value(*val + right_val);
-              *self.right = new_right;
-              return (true, left_val, 0, false);
-            },
-            Node::Pair(right_pair) => {
-              right_pair.increase_left(right_val);
-              return (true, left_val, 0, false);
-            }
-          }
-        },
+        Node::Pair(_) => unreachable!(),
       };
 
       let right_val = match &mut *self.right {
         Node::Value(val) => val,
-        Node::Pair(pair) => {
-          let (_, left_val, right_val, just_exploded)
-            = pair.explode(depth + 1);
-
-          if just_exploded {
-            *self.right = Node::Value(0);
-          }
-
-          match &mut *self.left {
-            Node::Value(val) => {
-              let new_left = Node::Value(*val + left_val);
-              *self.left = new_left;
-              return (true, 0, right_val, false);
-            },
-            Node::Pair(left_pair) => {
-              left_pair.increase_right(left_val);
-              return (true, 0, right_val, false);
-            }
-          }
-        },
+        Node::Pair(_) => unreachable!(),
       };
 
-      (true, *left_val, *right_val, true)
+      (true, *left_val, *right_val)
     }
     else {
       match &mut *self.left {
         Node::Value(_) => {},
         Node::Pair(pair) => {
-          let (has_exploded, left_val, right_val, just_exploded)
-            = pair.explode(depth + 1);
+          let (has_exploded, left_val, right_val) = pair.explode(depth + 1);
 
-          if just_exploded {
+          if depth == 3 {
             *self.left = Node::Value(0);
           }
 
@@ -213,11 +171,11 @@ impl Pair {
               Node::Value(val) => {
                 let new_right = Node::Value(*val + right_val);
                 *self.right = new_right;
-                return (true, left_val, 0, false);
+                return (true, left_val, 0);
               },
               Node::Pair(right_pair) => {
                 right_pair.increase_left(right_val);
-                return (true, left_val, 0, false);
+                return (true, left_val, 0);
               }
             }
           }
@@ -225,12 +183,11 @@ impl Pair {
       }
 
       match &mut *self.right {
-        Node::Value(_) => (false, 0, 0, false),
+        Node::Value(_) => (false, 0, 0),
         Node::Pair(pair) => {
-          let (has_exploded, left_val, right_val, just_exploded)
-            = pair.explode(depth + 1);
+          let (has_exploded, left_val, right_val) = pair.explode(depth + 1);
 
-          if just_exploded {
+          if depth == 3 {
             *self.right = Node::Value(0);
           }
 
@@ -239,16 +196,16 @@ impl Pair {
               Node::Value(val) => {
                 let new_left = Node::Value(*val + left_val);
                 *self.left = new_left;
-                return (true, 0, right_val, false);
+                return (true, 0, right_val);
               },
               Node::Pair(left_pair) => {
                 left_pair.increase_right(left_val);
-                return (true, 0, right_val, false);
+                return (true, 0, right_val);
               }
             }
           }
 
-          (false, 0, 0, false)
+          (false, 0, 0)
         },
       }
     }
@@ -320,7 +277,6 @@ fn add(a: Pair, b: Pair) -> Pair {
   let right= Box::new(Node::Pair(b));
 
   let mut new_pair = Pair{left, right};
-  println!("{}", new_pair);
 
   while new_pair.reduce() {};
 
@@ -342,8 +298,6 @@ pub fn snailfish() -> (u64, u64) {
     let new_pair = add(pair, e);
     pair = new_pair;
   };
-
-  println!("{}", pair);
 
   (pair.magnitude(), 0)
 }
