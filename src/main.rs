@@ -19,6 +19,7 @@ mod chiton;
 mod packet_decoder;
 mod trick_shot;
 mod snailfish;
+mod trench_map;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -38,6 +39,7 @@ use chiton::chiton;
 use packet_decoder::packet_decoder;
 use trick_shot::trick_shot;
 use snailfish::snailfish;
+use trench_map::trench_map;
 
 use std::fmt::Display;
 
@@ -66,4 +68,6 @@ fn main() {
     print_results(16, packet_decoder());
     print_results(17, trick_shot());
     print_results(18, snailfish());
+    print_results(19, (0, 0));
+    print_results(20, trench_map());
 }
