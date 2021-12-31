@@ -21,6 +21,7 @@ mod trick_shot;
 mod snailfish;
 mod trench_map;
 mod dirac_dice;
+mod reactor_reboot;
 
 use sonar_sweep::sonar_sweep;
 use dive::dive;
@@ -42,6 +43,7 @@ use trick_shot::trick_shot;
 use snailfish::snailfish;
 use trench_map::trench_map;
 use dirac_dice::dirac_dice;
+use reactor_reboot::reactor_reboot;
 
 use std::fmt::Display;
 
@@ -73,4 +75,5 @@ fn main() {
     print_results(19, (0, 0));
     print_results(20, trench_map());
     print_results(21, dirac_dice());
+    print_results(22, reactor_reboot());
 }
